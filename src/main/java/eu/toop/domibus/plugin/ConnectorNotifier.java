@@ -135,9 +135,9 @@ public class ConnectorNotifier implements Statics {
   private void fillCommonValues(String targetAction, Submission toDeliver) {
     toDeliver.setAction(targetAction);
     toDeliver.setService(settings.getToopInterfaceService());
-    toDeliver.addFromParty(settings.getGatewayPartyID(), UNREGISTERED_TYPE);
+    toDeliver.addFromParty(settings.getGatewayPartyID(), null);
     toDeliver.setFromRole(settings.getGatewayRole());
-    toDeliver.addToParty(settings.getConnectorPartyID(), UNREGISTERED_TYPE);
+    toDeliver.addToParty(settings.getConnectorPartyID(), null);
     toDeliver.setToRole(settings.getBackendRole());
   }
 

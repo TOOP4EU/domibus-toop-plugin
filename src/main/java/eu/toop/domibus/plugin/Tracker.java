@@ -15,6 +15,7 @@
  */
 package eu.toop.domibus.plugin;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -38,12 +39,12 @@ public class Tracker {
 
   PrintWriter trackWriter;
 
-  public Tracker(String title, String host, int port) {
+  public Tracker(String title) {
     this.title = title;
     try {
-      Socket socket = new Socket();
-      socket.connect(new InetSocketAddress(host, port));
-      trackWriter = new PrintWriter(socket.getOutputStream());
+      File file = new File("/domibustrack");
+      file.mkdir();
+      trackWriter = new PrintWriter(new File(file, "track.txt"));
       trackWriter.println("Hello, I am " + title);
       trackWriter.flush();
     } catch (Exception ex) {

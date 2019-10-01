@@ -195,8 +195,8 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
     toDeliver.setService(settings.getToopInterfaceService());
     toDeliver.setFromRole(settings.getGatewayRole());
     toDeliver.setToRole(settings.getBackendRole());
-    toDeliver.addFromParty(settings.getGatewayPartyID(), UNREGISTERED_TYPE);
-    toDeliver.addToParty(settings.getConnectorPartyID(), UNREGISTERED_TYPE);
+    toDeliver.addFromParty(settings.getGatewayPartyID(), null);
+    toDeliver.addToParty(settings.getConnectorPartyID(), null);
 
 
     addPropertyIfNotNull(toDeliver, request.getRefToMessageId(), PROP_REFTOMESSAGEID);
@@ -268,7 +268,7 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
           break;
         case PROP_TOPARTYID: //Toop
           LOG.info(property.getValue() + (StringUtils.isEmpty(property.getType()) ? UNREGISTERED_TYPE : property.getType()));
-          toSubmit.addToParty(property.getValue(), StringUtils.isEmpty(property.getType()) ? UNREGISTERED_TYPE : property.getType());
+          toSubmit.addToParty(property.getValue(), null);
           break;
         case PROP_SERVICE: //Toop
           toSubmit.setService(property.getValue());
@@ -303,7 +303,7 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
       toSubmit.addPayload(copyPayload);
     }
 
-    toSubmit.addFromParty(settings.getGatewayPartyID(), UNREGISTERED_TYPE);
+    toSubmit.addFromParty(settings.getGatewayPartyID(), null);
     toSubmit.setFromRole(settings.getGatewayRole());
 
     tracker.writeInfo("handleSubmit",
@@ -323,6 +323,7 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
       connectorNotifier.sendBackSubmissionSuccess(this, request, toSubmit);
     } catch (Exception ex) {
       LOG.error(ex.getMessage(), ex);
+      LOG.info("Send submission failure");
       connectorNotifier.sendBackSubmissionFailure(this, request, toSubmit, ex.getMessage());
     }
   }

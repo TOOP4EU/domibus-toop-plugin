@@ -44,32 +44,32 @@ public class ToopAs4Transformer implements MessageSubmissionTransformer<Submissi
 
   @Override
   public Submission transformFromSubmission(final Submission submission, final Submission target) {
-    LOG.debug("Transform from submission");
-    Collection<Submission.TypedProperty> messageProperties = submission.getMessageProperties();
-    String sNewTargetURL = null;
-    String sNewC3Cert = null;
-    Iterator<Submission.TypedProperty> iterator = messageProperties.iterator();
-    while (iterator.hasNext()) {
-      Submission.TypedProperty property = iterator.next();
-      if (property.getKey().equals("TargetURL")) {
-        sNewTargetURL = property.getValue();
-        iterator.remove();
-      } else if (property.getKey().equals("ToPartyCertificate")) {
-        sNewC3Cert = property.getValue();
-        iterator.remove();
-      }
-    }
-
-    LOG.info("New C3Certificate " + sNewC3Cert);
-    LOG.info("New C3URL " + sNewTargetURL);
-
-    //now put in the new values
-    if (sNewC3Cert != null)
-      submission.addMessageProperty("C3Certificate", sNewC3Cert);
-
-    if (sNewTargetURL != null)
-      submission.addMessageProperty("C3URL", sNewTargetURL);
-
+    //LOG.debug("Transform from submission");
+    //Collection<Submission.TypedProperty> messageProperties = submission.getMessageProperties();
+    //String sNewTargetURL = null;
+    //String sNewC3Cert = null;
+    //Iterator<Submission.TypedProperty> iterator = messageProperties.iterator();
+    //while (iterator.hasNext()) {
+    //  Submission.TypedProperty property = iterator.next();
+    //  if (property.getKey().equals("TargetURL")) {
+    //    sNewTargetURL = property.getValue();
+    //    iterator.remove();
+    //  } else if (property.getKey().equals("ToPartyCertificate")) {
+    //    sNewC3Cert = property.getValue();
+    //    iterator.remove();
+    //  }
+    //}
+//
+    //LOG.info("New C3Certificate " + sNewC3Cert);
+    //LOG.info("New C3URL " + sNewTargetURL);
+//
+    ////now put in the new values
+    //if (sNewC3Cert != null)
+    //  submission.addMessageProperty("C3Certificate", sNewC3Cert);
+//
+    //if (sNewTargetURL != null)
+    //  submission.addMessageProperty("C3URL", sNewTargetURL);
+//
     //return the original one.
     return submission;
   }
