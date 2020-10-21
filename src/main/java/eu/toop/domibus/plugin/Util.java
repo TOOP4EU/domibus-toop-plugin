@@ -18,6 +18,7 @@ package eu.toop.domibus.plugin;
 import eu.domibus.plugin.Submission;
 
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  *
@@ -25,20 +26,23 @@ import java.util.Iterator;
  */
 public class Util {
   public static String getFromPartyIds(Submission submission) {
-    StringBuffer froms = new StringBuffer();
-    Iterator<Submission.Party> iterator = submission.getFromParties().iterator();
-    while (iterator.hasNext()){
-      froms.append(iterator.next().getPartyId()).append(',');
-    }
+    final Set<Submission.Party> parties = submission.getFromParties();
 
-    return froms.toString();
+    return getPartyIds(parties);
   }
 
   public static String getToPartyIds(Submission submission) {
+    final Set<Submission.Party> parties = submission.getToParties();
+    return getPartyIds(parties);
+  }
+
+
+  private static String getPartyIds(Set<Submission.Party> parties) {
     StringBuffer froms = new StringBuffer();
-    Iterator<Submission.Party> iterator = submission.getToParties().iterator();
-    while (iterator.hasNext()){
-      froms.append(iterator.next().getPartyId()).append(',');
+    Iterator<Submission.Party> iterator = parties.iterator();
+    while (iterator.hasNext()) {
+      final Submission.Party party = iterator.next();
+      froms.append(party.getPartyId()).append("::").append(party.getPartyIdType());
     }
 
     return froms.toString();

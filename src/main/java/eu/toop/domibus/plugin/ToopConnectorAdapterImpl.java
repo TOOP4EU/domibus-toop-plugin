@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2018-2019 toop.eu
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -195,8 +195,8 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
     toDeliver.setService(settings.getToopInterfaceService());
     toDeliver.setFromRole(settings.getGatewayRole());
     toDeliver.setToRole(settings.getBackendRole());
-    toDeliver.addFromParty(settings.getGatewayPartyID(), null);
-    toDeliver.addToParty(settings.getConnectorPartyID(), null);
+    toDeliver.addFromParty(settings.getGatewayPartyID(), "urn:oasis:names:tc:ebcore:partyid-type:unregistered");
+    toDeliver.addToParty(settings.getConnectorPartyID(), "urn:oasis:names:tc:ebcore:partyid-type:unregistered");
 
 
     addPropertyIfNotNull(toDeliver, request.getRefToMessageId(), PROP_REFTOMESSAGEID);
@@ -268,7 +268,7 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
           break;
         case PROP_TOPARTYID: //Toop
           LOG.info(property.getValue() + (StringUtils.isEmpty(property.getType()) ? UNREGISTERED_TYPE : property.getType()));
-          toSubmit.addToParty(property.getValue(), null);
+          toSubmit.addToParty(property.getValue(), "urn:oasis:names:tc:ebcore:partyid-type:unregistered");
           break;
         case PROP_SERVICE: //Toop
           toSubmit.setService(property.getValue());
@@ -303,7 +303,7 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
       toSubmit.addPayload(copyPayload);
     }
 
-    toSubmit.addFromParty(settings.getGatewayPartyID(), null);
+    toSubmit.addFromParty(settings.getGatewayPartyID(), "urn:oasis:names:tc:ebcore:partyid-type:unregistered");
     toSubmit.setFromRole(settings.getGatewayRole());
 
     tracker.writeInfo("handleSubmit",
@@ -314,16 +314,20 @@ public class ToopConnectorAdapterImpl extends AbstractBackendConnector<Submissio
         kvp("New Message            ", "---------"),
         kvp("MessageId", toSubmit.getMessageId()),
         kvp("Action", toSubmit.getAction()),
+        kvp("Service", toSubmit.getService()),
+        kvp("ServiceType", toSubmit.getServiceType()),
         kvp("From          ", Util.getFromPartyIds(toSubmit)),
         kvp("To            ", Util.getToPartyIds(toSubmit)));
 
     try {
       super.submit(toSubmit);
       submittedMessageIds.add(toSubmit.getMessageId());
+
+      LOG.info("Send submission success");
       connectorNotifier.sendBackSubmissionSuccess(this, request, toSubmit);
     } catch (Exception ex) {
       LOG.error(ex.getMessage(), ex);
-      LOG.info("Send submission failure");
+      LOG.error("Send submission failure");
       connectorNotifier.sendBackSubmissionFailure(this, request, toSubmit, ex.getMessage());
     }
   }
